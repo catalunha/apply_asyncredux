@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class DataPageDS extends StatefulWidget {
   final String name;
   final Function(String) onSaveName;
+  final Function onChangePage;
 
-  const DataPageDS({Key key, this.name, this.onSaveName}) : super(key: key);
+  const DataPageDS({Key key, this.name, this.onSaveName, this.onChangePage})
+      : super(key: key);
   @override
   _DataPageDSState createState() => _DataPageDSState();
 }
@@ -22,6 +24,12 @@ class _DataPageDSState extends State<DataPageDS> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Show Error Dialog Example'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: widget.onChangePage,
+          )
+        ],
       ),
       body: Center(
         child: Column(

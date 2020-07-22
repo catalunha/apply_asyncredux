@@ -22,9 +22,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'ApplyAsyncRedux',
         routes: Routes.routes,
-        home: UserExceptionDialog<AppState>(
-          child: HomePage(),
-        ),
+        navigatorKey: Keys.navigatorKey,
+        // home: UserExceptionDialog<AppState>(
+        //   child: HomePage(),
+        // ),
       ),
     );
   }

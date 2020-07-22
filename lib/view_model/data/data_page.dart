@@ -7,20 +7,21 @@ import 'package:flutter/cupertino.dart';
 class ViewModel extends BaseModel<AppState> {
   String name;
   Function(String) onSaveName;
-
+  Function onChangePage;
   ViewModel();
   ViewModel.build({
     @required this.name,
     @required this.onSaveName,
+    @required this.onChangePage,
   }) : super(equals: [name]);
   @override
   ViewModel fromStore() => ViewModel.build(
         name: state.dataState.name,
         onSaveName: (String name) {
-          dispatch(UserExceptionAction('Saving $name'));
-
           dispatch(SaveUserDataAction(name));
+          // dispatch(UserExceptionAction('Saving $name'));
         },
+        onChangePage: () => dispatch(NavigateAction.pushNamed('/page1')),
       );
 }
 
@@ -32,6 +33,7 @@ class DataPage extends StatelessWidget {
       builder: (BuildContext context, ViewModel vm) => DataPageDS(
         name: vm.name,
         onSaveName: vm.onSaveName,
+        onChangePage: vm.onChangePage,
       ),
     );
   }
