@@ -15,11 +15,12 @@ class DataState {
   });
   factory DataState.initialState() {
     return DataState(
-        name: '',
-        number: 0,
-        waiting: false,
-        clearTextEvt: Event.spent(),
-        changeTextEvt: Event<String>.spent());
+      name: '',
+      number: 0,
+      waiting: false,
+      clearTextEvt: Event.spent(),
+      changeTextEvt: Event<String>.spent(),
+    );
   }
   DataState copyWith({
     String name,

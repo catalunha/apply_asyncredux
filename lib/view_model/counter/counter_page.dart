@@ -22,7 +22,8 @@ class ViewModel extends BaseModel<AppState> {
   ViewModel fromStore() => ViewModel.build(
       counter: state.counterState.counter,
       description: state.counterState.descriptionNumber,
-      waiting: state.counterState.waiting,
+      // waiting: state.counterState.waiting,
+      waiting: state.wait.isWaiting,
       onIncrement: () {
         // dispatch(IncrementCounterAction(amount: 1));
         dispatch(IncrementAndGetDescriptionCounterAction());

@@ -89,6 +89,16 @@ class _DataPageDSState extends State<DataPageDS> {
             ),
             if (widget.waiting)
               ModalBarrier(color: Colors.red.withOpacity(0.4)),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 15,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(index.toString()),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),

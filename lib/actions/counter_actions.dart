@@ -34,9 +34,14 @@ class IncrementAndGetDescriptionCounterAction extends ReduxAction<AppState> {
   }
 
   @override
-  void before() => dispatch(BarrierCounterAction(true));
+  void before() => dispatch(WaitAction.add(this));
   @override
-  void after() => dispatch(BarrierCounterAction(false));
+  void after() => dispatch(WaitAction.remove(this));
+
+  // @override
+  // void before() => dispatch(BarrierCounterAction(true));
+  // @override
+  // void after() => dispatch(BarrierCounterAction(false));
 }
 
 class BarrierCounterAction extends ReduxAction<AppState> {
