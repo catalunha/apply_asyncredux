@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:apply_asyncredux/states/app_state.dart';
 import 'package:async_redux/async_redux.dart';
@@ -92,4 +93,56 @@ class GetDescriptionDataAction extends ReduxAction<AppState> {
   void before() => dispatch(WaitAction.add(index));
   @override
   void after() => dispatch(WaitAction.remove(index));
+}
+
+class LoadMoreDataAction extends ReduxAction<AppState> {
+  @override
+  Future<AppState> reduce() async {
+    Response response = await get(
+        'http://numbersapi.com/${state.dataState.numTrivias.length}..${state.dataState.numTrivias.length + 19}');
+    List<String> list = state.dataState.numTrivias;
+    Map<String, dynamic> map = jsonDecode(response.body);
+    map.forEach((String key, value) => list.add(value.toString()));
+    return state.copyWith(
+      dataState: state.dataState.copyWith(
+        numTrivias: list,
+      ),
+    );
+  }
+
+  @override
+  void before() => dispatch(IsLoadingDataAction(true));
+  @override
+  void after() => dispatch(IsLoadingDataAction(false));
+}
+
+class RefreshDataAction extends ReduxAction<AppState> {
+  @override
+  Future<AppState> reduce() async {
+    Response response = await get('http://numbersapi.com/0..19');
+    List<String> list = [];
+    Map<String, dynamic> map = jsonDecode(response.body);
+    map.forEach((String key, value) => list.add(value.toString()));
+    return state.copyWith(
+      dataState: state.dataState.copyWith(
+        numTrivias: list,
+      ),
+    );
+  }
+
+  @override
+  void before() => dispatch(IsLoadingDataAction(true));
+  @override
+  void after() => dispatch(IsLoadingDataAction(false));
+}
+
+class IsLoadingDataAction extends ReduxAction<AppState> {
+  final bool value;
+  IsLoadingDataAction(this.value);
+  @override
+  AppState reduce() => state.copyWith(
+        dataState: state.dataState.copyWith(
+          isLoading: value,
+        ),
+      );
 }

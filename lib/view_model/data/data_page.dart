@@ -15,7 +15,10 @@ class ViewModel extends BaseModel<AppState> {
   Function onChangeText;
   bool waiting2;
   void Function(int) onGetDescription;
-
+  List<String> numTrivias;
+  bool isLoading;
+  Function() onLoadMore;
+  Future<void> Function() onRefresh;
   ViewModel();
   ViewModel.build({
     @required this.name,
@@ -28,7 +31,20 @@ class ViewModel extends BaseModel<AppState> {
     @required this.onChangeText,
     @required this.waiting2,
     @required this.onGetDescription,
-  }) : super(equals: [name, waiting, clearTextEvt, changeTextEvt, waiting2]);
+    @required this.numTrivias,
+    @required this.isLoading,
+    @required this.onLoadMore,
+    @required this.onRefresh,
+  }) : super(equals: [
+          name,
+          waiting,
+          clearTextEvt,
+          changeTextEvt,
+          waiting2,
+          numTrivias,
+          isLoading,
+        ]);
+
   @override
   ViewModel fromStore() => ViewModel.build(
         name: state.dataState.name,
@@ -45,6 +61,10 @@ class ViewModel extends BaseModel<AppState> {
         waiting2: state.wait.isWaiting,
         onGetDescription: (int index) =>
             dispatch(GetDescriptionDataAction(index)),
+        numTrivias: state.dataState.numTrivias,
+        isLoading: state.dataState.isLoading,
+        onLoadMore: () => dispatch(LoadMoreDataAction()),
+        onRefresh: () => dispatchFuture(RefreshDataAction()),
       );
 }
 
@@ -64,7 +84,13 @@ class DataPage extends StatelessWidget {
         onChangeText: vm.onChangeText,
         waiting2: vm.waiting2,
         onGetDescription: vm.onGetDescription,
+        numTrivias: vm.numTrivias,
+        isLoading: vm.isLoading,
+        onLoadMore: vm.onLoadMore,
+        onRefresh: vm.onRefresh,
       ),
+      debug: this,
+      onInit: (store) => store.dispatch(RefreshDataAction()),
     );
   }
 }

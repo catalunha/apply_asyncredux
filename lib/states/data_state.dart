@@ -7,13 +7,18 @@ class DataState {
   final Event clearTextEvt;
   final Event<String> changeTextEvt;
   final Map<int, String> descriptions;
-  DataState(
-      {this.name,
-      this.number,
-      this.waiting,
-      this.clearTextEvt,
-      this.changeTextEvt,
-      this.descriptions});
+  final List<String> numTrivias;
+  final bool isLoading;
+  DataState({
+    this.name,
+    this.number,
+    this.waiting,
+    this.clearTextEvt,
+    this.changeTextEvt,
+    this.descriptions,
+    this.numTrivias,
+    this.isLoading,
+  });
   factory DataState.initialState() {
     return DataState(
       name: '',
@@ -22,6 +27,8 @@ class DataState {
       clearTextEvt: Event.spent(),
       changeTextEvt: Event<String>.spent(),
       descriptions: {},
+      numTrivias: <String>[],
+      isLoading: false,
     );
   }
   DataState copyWith({
@@ -31,6 +38,8 @@ class DataState {
     Event clearTextEvt,
     Event<String> changeTextEvt,
     Map<int, String> descriptions,
+    List<String> numTrivias,
+    bool isLoading,
   }) {
     return DataState(
       name: name ?? this.name,
@@ -39,6 +48,8 @@ class DataState {
       clearTextEvt: clearTextEvt ?? this.clearTextEvt,
       changeTextEvt: changeTextEvt ?? this.changeTextEvt,
       descriptions: descriptions ?? this.descriptions,
+      numTrivias: numTrivias ?? this.numTrivias,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 
@@ -47,6 +58,8 @@ class DataState {
       name.hashCode ^
       number.hashCode ^
       waiting.hashCode ^
+      numTrivias.hashCode ^
+      isLoading.hashCode ^
       descriptions.hashCode;
 
   @override
@@ -57,6 +70,8 @@ class DataState {
           number == other.number &&
           waiting == other.waiting &&
           descriptions == other.descriptions &&
+          numTrivias == other.numTrivias &&
+          isLoading == other.isLoading &&
           runtimeType == other.runtimeType;
   @override
   String toString() {

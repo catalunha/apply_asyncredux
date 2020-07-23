@@ -5,6 +5,8 @@ import 'package:apply_asyncredux/states/app_state.dart';
 
 Store<AppState> store = Store<AppState>(
   initialState: AppState.initialState(),
+  actionObservers: [Log<AppState>.printer()],
+  modelObserver: DefaultModelObserver(),
 );
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

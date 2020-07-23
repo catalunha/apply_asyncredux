@@ -1,4 +1,3 @@
-import 'package:apply_asyncredux/view_model/data/my_item.dart';
 import 'package:async_redux/async_redux.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +12,10 @@ class DataPageDS extends StatefulWidget {
   final Function onChangeText;
   final bool waiting2;
   final void Function(int) onGetDescription;
+  final List<String> numTrivias;
+  final bool isLoading;
+  final Function() onLoadMore;
+  final Future<void> Function() onRefresh;
   const DataPageDS({
     Key key,
     this.name,
@@ -25,6 +28,10 @@ class DataPageDS extends StatefulWidget {
     this.onChangeText,
     this.waiting2,
     this.onGetDescription,
+    this.numTrivias,
+    this.isLoading,
+    this.onLoadMore,
+    this.onRefresh,
   }) : super(key: key);
   @override
   _DataPageDSState createState() => _DataPageDSState();
@@ -32,10 +39,25 @@ class DataPageDS extends StatefulWidget {
 
 class _DataPageDSState extends State<DataPageDS> {
   TextEditingController controller;
+  ScrollController scrollController;
   @override
   void initState() {
+    scrollController = ScrollController()
+      ..addListener(() {
+        if (!widget.isLoading &&
+            scrollController.position.maxScrollExtent ==
+                scrollController.position.pixels) {
+          widget.onLoadMore();
+        }
+      });
     super.initState();
     controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -72,47 +94,66 @@ class _DataPageDSState extends State<DataPageDS> {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            // Text('Type a name and save:\n(See error if less than 4 chars)'),
-            // TextField(
-            //   controller: controller,
-            //   onSubmitted: widget.onSaveName,
-            // ),
-            // Text('Current name: ${widget.name}'),
-            // Text('This is a TextField. Click to edit it'),
-            // TextField(
-            //   controller: controller,
-            // ),
-            // RaisedButton(
-            //   onPressed: widget.onChangeText,
-            //   child: Text('Change'),
-            // ),
-            // RaisedButton(
-            //   onPressed: widget.onClearText,
-            //   child: Text('Clear'),
-            // ),
-            // if (widget.waiting)
-            //   ModalBarrier(color: Colors.red.withOpacity(0.4)),
-            Expanded(
+      body: (widget.numTrivias == null || widget.numTrivias.isEmpty)
+          ? Container()
+          : RefreshIndicator(
+              onRefresh: widget.onRefresh,
               child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return MyItem(
-                    index: index,
-                    onGetDescription: widget.onGetDescription,
-                  );
-                },
+                controller: scrollController,
+                itemCount: widget.numTrivias.length,
+                itemBuilder: (context, index) => ListTile(
+                  leading: CircleAvatar(
+                    child: Text(
+                      index.toString(),
+                    ),
+                  ),
+                  title: Text(widget.numTrivias[index]),
+                ),
               ),
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => widget.onSaveName(controller.text),
-        child: Text('Save'),
-      ),
+            ),
     );
+
+    // body: Center(
+    //   child: Column(
+    //     children: [
+    //       // Text('Type a name and save:\n(See error if less than 4 chars)'),
+    //       // TextField(
+    //       //   controller: controller,
+    //       //   onSubmitted: widget.onSaveName,
+    //       // ),
+    //       // Text('Current name: ${widget.name}'),
+    //       // Text('This is a TextField. Click to edit it'),
+    //       // TextField(
+    //       //   controller: controller,
+    //       // ),
+    //       // RaisedButton(
+    //       //   onPressed: widget.onChangeText,
+    //       //   child: Text('Change'),
+    //       // ),
+    //       // RaisedButton(
+    //       //   onPressed: widget.onClearText,
+    //       //   child: Text('Clear'),
+    //       // ),
+    //       // if (widget.waiting)
+    //       //   ModalBarrier(color: Colors.red.withOpacity(0.4)),
+    //       Expanded(
+    //         child: ListView.builder(
+    //           itemCount: 10,
+    //           itemBuilder: (context, index) {
+    //             return MyItem(
+    //               index: index,
+    //               onGetDescription: widget.onGetDescription,
+    //             );
+    //           },
+    //         ),
+    //       )
+    //     ],
+    //   ),
+    // ),
+    // floatingActionButton: FloatingActionButton(
+    //   onPressed: () => widget.onSaveName(controller.text),
+    //   child: Text('Save'),
+    // ),
+    // );
   }
 }
