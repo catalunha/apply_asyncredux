@@ -1,12 +1,26 @@
+import 'package:async_redux/async_redux.dart';
 import 'package:flutter/material.dart';
 
 class DataPageDS extends StatefulWidget {
   final String name;
   final Function(String) onSaveName;
   final Function onChangePage;
-
-  const DataPageDS({Key key, this.name, this.onSaveName, this.onChangePage})
-      : super(key: key);
+  final bool waiting;
+  final Event clearTextEvt;
+  final Event<String> changeTextEvt;
+  final Function onClearText;
+  final Function onChangeText;
+  const DataPageDS({
+    Key key,
+    this.name,
+    this.onSaveName,
+    this.onChangePage,
+    this.waiting,
+    this.clearTextEvt,
+    this.changeTextEvt,
+    this.onClearText,
+    this.onChangeText,
+  }) : super(key: key);
   @override
   _DataPageDSState createState() => _DataPageDSState();
 }
@@ -17,6 +31,27 @@ class _DataPageDSState extends State<DataPageDS> {
   void initState() {
     super.initState();
     controller = TextEditingController();
+  }
+
+  @override
+  void didUpdateWidget(DataPageDS oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    consumeEvents();
+  }
+
+  void consumeEvents() {
+    if (widget.clearTextEvt.consume()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) controller.clear();
+      });
+    }
+    String newText = widget.changeTextEvt.consume();
+    if (newText != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted)
+          controller.value = controller.value.copyWith(text: newText);
+      });
+    }
   }
 
   @override
@@ -34,12 +69,26 @@ class _DataPageDSState extends State<DataPageDS> {
       body: Center(
         child: Column(
           children: [
-            Text('Type a name and save:\n(See error if less than 4 chars)'),
+            // Text('Type a name and save:\n(See error if less than 4 chars)'),
+            // TextField(
+            //   controller: controller,
+            //   onSubmitted: widget.onSaveName,
+            // ),
+            // Text('Current name: ${widget.name}'),
+            Text('This is a TextField. Click to edit it'),
             TextField(
               controller: controller,
-              onSubmitted: widget.onSaveName,
             ),
-            Text('Current name: ${widget.name}'),
+            RaisedButton(
+              onPressed: widget.onChangeText,
+              child: Text('Change'),
+            ),
+            RaisedButton(
+              onPressed: widget.onClearText,
+              child: Text('Clear'),
+            ),
+            if (widget.waiting)
+              ModalBarrier(color: Colors.red.withOpacity(0.4)),
           ],
         ),
       ),

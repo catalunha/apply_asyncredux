@@ -11,7 +11,7 @@ class CounterState {
   factory CounterState.initialState() {
     return CounterState(counter: 0, descriptionNumber: '', waiting: false);
   }
-  CounterState clone({int counter, String descriptionNumber, bool waiting}) {
+  CounterState copyWith({int counter, String descriptionNumber, bool waiting}) {
     return CounterState(
       counter: counter ?? this.counter,
       descriptionNumber: descriptionNumber ?? this.descriptionNumber,

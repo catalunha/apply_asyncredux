@@ -14,7 +14,7 @@ class AppState {
       dataState: DataState.initialState(),
     );
   }
-  AppState clone({
+  AppState copyWith({
     CounterState counterState,
     DataState dataState,
   }) {

@@ -12,9 +12,9 @@ class IncrementCounterAction extends ReduxAction<AppState> {
 
   @override
   AppState reduce() {
-    CounterState _counterState =
-        state.counterState.clone(counter: state.counterState.counter + amount);
-    return state.clone(
+    CounterState _counterState = state.counterState
+        .copyWith(counter: state.counterState.counter + amount);
+    return state.copyWith(
       counterState: _counterState,
     );
   }
@@ -26,8 +26,8 @@ class IncrementAndGetDescriptionCounterAction extends ReduxAction<AppState> {
     dispatch(IncrementCounterAction(amount: 1));
     String description =
         await read('http://numbersapi.com/${state.counterState.counter}');
-    return state.clone(
-      counterState: state.counterState.clone(
+    return state.copyWith(
+      counterState: state.counterState.copyWith(
         descriptionNumber: description,
       ),
     );
@@ -45,8 +45,8 @@ class BarrierCounterAction extends ReduxAction<AppState> {
   BarrierCounterAction(this.waiting);
   @override
   AppState reduce() {
-    return state.clone(
-      counterState: state.counterState.clone(
+    return state.copyWith(
+      counterState: state.counterState.copyWith(
         waiting: waiting,
       ),
     );
