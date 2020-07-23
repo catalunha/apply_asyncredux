@@ -86,7 +86,7 @@ class _DataPageDSState extends State<DataPageDS> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.waiting2 ? 'Downloading...' : 'Show Error Dialog Example'),
+            widget.isLoading ? 'Downloading...' : 'Show Error Dialog Example'),
         actions: [
           IconButton(
             icon: Icon(Icons.send),

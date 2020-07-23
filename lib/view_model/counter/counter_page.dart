@@ -41,7 +41,8 @@ class CounterPage extends StatelessWidget {
         waiting: vm.waiting,
         onIncrement: vm.onIncrement,
       ),
-      distinct: true,
+      // distinct: true,
+      debug: this,
     );
   }
 }
