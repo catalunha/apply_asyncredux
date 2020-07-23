@@ -13,6 +13,9 @@ class ViewModel extends BaseModel<AppState> {
   Event<String> changeTextEvt;
   Function onClearText;
   Function onChangeText;
+  bool waiting2;
+  void Function(int) onGetDescription;
+
   ViewModel();
   ViewModel.build({
     @required this.name,
@@ -23,7 +26,9 @@ class ViewModel extends BaseModel<AppState> {
     @required this.changeTextEvt,
     @required this.onClearText,
     @required this.onChangeText,
-  }) : super(equals: [name, waiting, clearTextEvt, changeTextEvt]);
+    @required this.waiting2,
+    @required this.onGetDescription,
+  }) : super(equals: [name, waiting, clearTextEvt, changeTextEvt, waiting2]);
   @override
   ViewModel fromStore() => ViewModel.build(
         name: state.dataState.name,
@@ -37,6 +42,9 @@ class ViewModel extends BaseModel<AppState> {
         changeTextEvt: state.dataState.changeTextEvt,
         onClearText: () => dispatch(ClearTextDataAction()),
         onChangeText: () => dispatch(ChangeTextDataAction()),
+        waiting2: state.wait.isWaiting,
+        onGetDescription: (int index) =>
+            dispatch(GetDescriptionDataAction(index)),
       );
 }
 
@@ -54,6 +62,8 @@ class DataPage extends StatelessWidget {
         changeTextEvt: vm.changeTextEvt,
         onClearText: vm.onClearText,
         onChangeText: vm.onChangeText,
+        waiting2: vm.waiting2,
+        onGetDescription: vm.onGetDescription,
       ),
     );
   }

@@ -6,14 +6,14 @@ class DataState {
   final bool waiting;
   final Event clearTextEvt;
   final Event<String> changeTextEvt;
-  // final Map<> description;
-  DataState({
-    this.name,
-    this.number,
-    this.waiting,
-    this.clearTextEvt,
-    this.changeTextEvt,
-  });
+  final Map<int, String> descriptions;
+  DataState(
+      {this.name,
+      this.number,
+      this.waiting,
+      this.clearTextEvt,
+      this.changeTextEvt,
+      this.descriptions});
   factory DataState.initialState() {
     return DataState(
       name: '',
@@ -21,6 +21,7 @@ class DataState {
       waiting: false,
       clearTextEvt: Event.spent(),
       changeTextEvt: Event<String>.spent(),
+      descriptions: {},
     );
   }
   DataState copyWith({
@@ -29,6 +30,7 @@ class DataState {
     bool waiting,
     Event clearTextEvt,
     Event<String> changeTextEvt,
+    Map<int, String> descriptions,
   }) {
     return DataState(
       name: name ?? this.name,
@@ -36,11 +38,16 @@ class DataState {
       waiting: waiting ?? this.waiting,
       clearTextEvt: clearTextEvt ?? this.clearTextEvt,
       changeTextEvt: changeTextEvt ?? this.changeTextEvt,
+      descriptions: descriptions ?? this.descriptions,
     );
   }
 
   @override
-  int get hashCode => name.hashCode ^ number.hashCode ^ waiting.hashCode;
+  int get hashCode =>
+      name.hashCode ^
+      number.hashCode ^
+      waiting.hashCode ^
+      descriptions.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -49,6 +56,7 @@ class DataState {
           name == other.name &&
           number == other.number &&
           waiting == other.waiting &&
+          descriptions == other.descriptions &&
           runtimeType == other.runtimeType;
   @override
   String toString() {

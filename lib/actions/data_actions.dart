@@ -69,3 +69,27 @@ class _WaitDataAction extends ReduxAction<AppState> {
         ),
       );
 }
+
+class GetDescriptionDataAction extends ReduxAction<AppState> {
+  int index;
+  GetDescriptionDataAction(this.index);
+  @override
+  Future<AppState> reduce() async {
+    String description = await read('http://numbersapi.com/$index');
+    await Future.delayed(
+      Duration(seconds: 2),
+    );
+    Map<int, String> newDescriptions = Map.of(state.dataState.descriptions);
+    newDescriptions[index] = description;
+    return state.copyWith(
+      dataState: state.dataState.copyWith(
+        descriptions: newDescriptions,
+      ),
+    );
+  }
+
+  @override
+  void before() => dispatch(WaitAction.add(index));
+  @override
+  void after() => dispatch(WaitAction.remove(index));
+}

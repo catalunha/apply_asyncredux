@@ -1,3 +1,4 @@
+import 'package:apply_asyncredux/view_model/data/my_item.dart';
 import 'package:async_redux/async_redux.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,8 @@ class DataPageDS extends StatefulWidget {
   final Event<String> changeTextEvt;
   final Function onClearText;
   final Function onChangeText;
+  final bool waiting2;
+  final void Function(int) onGetDescription;
   const DataPageDS({
     Key key,
     this.name,
@@ -20,6 +23,8 @@ class DataPageDS extends StatefulWidget {
     this.changeTextEvt,
     this.onClearText,
     this.onChangeText,
+    this.waiting2,
+    this.onGetDescription,
   }) : super(key: key);
   @override
   _DataPageDSState createState() => _DataPageDSState();
@@ -58,7 +63,8 @@ class _DataPageDSState extends State<DataPageDS> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Show Error Dialog Example'),
+        title: Text(
+            widget.waiting2 ? 'Downloading...' : 'Show Error Dialog Example'),
         actions: [
           IconButton(
             icon: Icon(Icons.send),
@@ -75,26 +81,27 @@ class _DataPageDSState extends State<DataPageDS> {
             //   onSubmitted: widget.onSaveName,
             // ),
             // Text('Current name: ${widget.name}'),
-            Text('This is a TextField. Click to edit it'),
-            TextField(
-              controller: controller,
-            ),
-            RaisedButton(
-              onPressed: widget.onChangeText,
-              child: Text('Change'),
-            ),
-            RaisedButton(
-              onPressed: widget.onClearText,
-              child: Text('Clear'),
-            ),
-            if (widget.waiting)
-              ModalBarrier(color: Colors.red.withOpacity(0.4)),
+            // Text('This is a TextField. Click to edit it'),
+            // TextField(
+            //   controller: controller,
+            // ),
+            // RaisedButton(
+            //   onPressed: widget.onChangeText,
+            //   child: Text('Change'),
+            // ),
+            // RaisedButton(
+            //   onPressed: widget.onClearText,
+            //   child: Text('Clear'),
+            // ),
+            // if (widget.waiting)
+            //   ModalBarrier(color: Colors.red.withOpacity(0.4)),
             Expanded(
               child: ListView.builder(
-                itemCount: 15,
+                itemCount: 10,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(index.toString()),
+                  return MyItem(
+                    index: index,
+                    onGetDescription: widget.onGetDescription,
                   );
                 },
               ),
