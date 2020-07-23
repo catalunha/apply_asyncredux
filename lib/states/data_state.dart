@@ -6,6 +6,7 @@ class DataState {
   final bool waiting;
   final Event clearTextEvt;
   final Event<String> changeTextEvt;
+  // final Map<> description;
   DataState({
     this.name,
     this.number,
